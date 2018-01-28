@@ -31,7 +31,7 @@ def multiple_runs(N_max, sep, n_t):
             error2_accu += (run[1] ** 2)
             integrated_list = np.append(integrated_list,run[0])
         print(integrated_list)
-        results.append([N, mean_accu/n_t, np.std(integrated_list), np.sqrt(error2_accu)/n_t])
+        results.append([N, mean_accu/n_t, np.std(integrated_list)/sqrt(n_t), np.sqrt(error2_accu)/n_t])
         print("N = "+str(N)+" computation complete!")
     print(results)
     return results
