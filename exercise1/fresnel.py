@@ -64,7 +64,6 @@ for D in lengths_D_to_try:
     ax2.spines['right'].set_color('none')
     ax2.spines['top'].set_color('none')
     ax2.set_xlabel("Distance from centre of slit on plane normal to slit / cm")
-    #ax2.xaxis.set_label_coords(1.0, 0.55)
     ax2.set_ylabel("Intensity / arb. units", rotation='horizontal')
     ax2.yaxis.set_label_coords(0.66, 0.95)
     plt.title("Diffraction Pattern for D = " + str(D) + "cm")
