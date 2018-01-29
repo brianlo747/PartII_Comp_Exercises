@@ -31,7 +31,7 @@ def multiple_runs(N_max, sep, n_t):
             error2_accu += (run[1] ** 2)
             integrated_list = np.append(integrated_list,run[0])
         print(integrated_list)
-        results.append([N, mean_accu/n_t, np.std(integrated_list)/sqrt(n_t), np.sqrt(error2_accu)/n_t])
+        results.append([N, mean_accu/n_t, np.std(integrated_list)/np.sqrt(n_t), np.sqrt(error2_accu/n_t)])
         print("N = "+str(N)+" computation complete!")
     print(results)
     return results
@@ -40,20 +40,28 @@ def multiple_runs(N_max, sep, n_t):
 results_table = multiple_runs(6, 25, 25)
 values_of_N = [l[0] for l in results_table]
 scatter_errors = [l[2] for l in results_table]
-sigma_errors = [l[3] for l in results_table]
+theoretical_errors = [l[3] for l in results_table]
 
-coeffs = np.polyfit(np.log(values_of_N), np.log(scatter_errors), deg=1)
-poly = np.poly1d(coeffs)
-yfit = lambda x: np.exp(poly(np.log(x)))
+coeffs_scatter = np.polyfit(np.log(values_of_N), np.log(scatter_errors), deg=1)
+coeffs_theoretical = np.polyfit(np.log(values_of_N), np.log(theoretical_errors), deg=1)
+poly_scatter = np.poly1d(coeffs_scatter)
+poly_theoretical = np.poly1d(coeffs_theoretical)
+yfit_scatter = lambda x: np.exp(poly_scatter(np.log(x)))
+yfit_theoretical = lambda x: np.exp(poly_theoretical(np.log(x)))
 
-plt.loglog(values_of_N, scatter_errors, 'o', markersize=2, color='b',
-           label="Standard Deviation of Monte-Carlo values")
-plt.loglog(values_of_N, yfit(values_of_N), color='b',
-           label = "Standard Deviation of Monte-Carlo values (Best-fit)")
-plt.loglog(values_of_N, sigma_errors, color='o',
-           label="Theoretical error")
+print(poly_scatter)
+print(poly_theoretical)
 
-plt.legend()
+plt.loglog(values_of_N, scatter_errors, 'o', markersize=2, color='blue',
+           label="Standard Deviation of Monte-Carlo estimates")
+plt.loglog(values_of_N, yfit_scatter(values_of_N), color='blue',
+           label = "Standard Deviation of Monte-Carlo estimates (Best-fit)")
+plt.loglog(values_of_N, theoretical_errors, 'o', markersize=2, color='orange',
+           label="Theoretical error of Monte-Carlo estimates")
+plt.loglog(values_of_N, yfit_theoretical(values_of_N), color='orange',
+           label="Theoretical error of Monte-Carlo estimates (Best-fit)")
+
+plt.legend(prop={'size': 8})
 plt.xlabel("N")
 plt.ylabel("Error")
 plt.title("Errors of the Monte-Carlo method against number of sample points N")
